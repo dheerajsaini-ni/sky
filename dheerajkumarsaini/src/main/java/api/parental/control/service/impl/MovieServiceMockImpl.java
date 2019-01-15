@@ -15,7 +15,7 @@ public class MovieServiceMockImpl implements MovieService {
             case "Sample Movie U":
                 return "U";
             case "Sample Movie PG":
-                return "U";
+                return "PG";
             case "Sample Movie 12":
                 return "12";
             case "Sample Movie 15":

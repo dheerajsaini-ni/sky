@@ -26,8 +26,11 @@ public class ParentalControlServiceImplTest {
     @Before
     public void init() throws TechnicalFailureException, TitleNotFoundException {
 
-        when(movieService.getParentalControlLevel("PG")).thenReturn("PG");
-        when(movieService.getParentalControlLevel("18")).thenReturn("18");
+        when(movieService.getParentalControlLevel("MOVIE_U")).thenReturn("U");
+        when(movieService.getParentalControlLevel("MOVIE_PG")).thenReturn("PG");
+        when(movieService.getParentalControlLevel("MOVIE_12")).thenReturn("12");
+        when(movieService.getParentalControlLevel("MOVIE_15")).thenReturn("15");
+        when(movieService.getParentalControlLevel("MOVIE_18")).thenReturn("18");
 
         when(movieService.getParentalControlLevel("not present")).thenThrow(new TitleNotFoundException("Title not found"));
         when(movieService.getParentalControlLevel("error")).thenThrow(new TechnicalFailureException("Technical failure"));
@@ -36,25 +39,50 @@ public class ParentalControlServiceImplTest {
     }
 
     @Test
-    public void test_adultCanWatchAdultMovies() throws TechnicalFailureException, TitleNotFoundException {
-        Assert.assertTrue(service.isAllowedToWatch("18", "18"));
+    public void test_adultCanWatchAllMovies() throws TechnicalFailureException, TitleNotFoundException {
+        Assert.assertTrue(service.isAllowedToWatch("MOVIE_U", "18"));
+        Assert.assertTrue(service.isAllowedToWatch("MOVIE_PG", "18"));
+        Assert.assertTrue(service.isAllowedToWatch("MOVIE_12", "18"));
+        Assert.assertTrue(service.isAllowedToWatch("MOVIE_15", "18"));
+        Assert.assertTrue(service.isAllowedToWatch("MOVIE_18", "18"));
     }
 
     @Test
-    public void test_underageCannotWatchAdultMovies() throws TechnicalFailureException, TitleNotFoundException {
-        Assert.assertFalse(service.isAllowedToWatch("18", "15"));
-        Assert.assertFalse(service.isAllowedToWatch("18", "12"));
-        Assert.assertFalse(service.isAllowedToWatch("18", "PG"));
-        Assert.assertFalse(service.isAllowedToWatch("18", "U"));
+    public void test_age15CanWatchLevel15AndBelow() throws TechnicalFailureException, TitleNotFoundException {
+
+        Assert.assertTrue(service.isAllowedToWatch("MOVIE_U", "15"));
+        Assert.assertTrue(service.isAllowedToWatch("MOVIE_PG", "15"));
+        Assert.assertTrue(service.isAllowedToWatch("MOVIE_12", "15"));
+        Assert.assertTrue(service.isAllowedToWatch("MOVIE_15", "15"));
+        Assert.assertFalse(service.isAllowedToWatch("MOVIE_18", "15"));
     }
 
     @Test
-    public void test_underageCannotWatchPGMovies() throws TechnicalFailureException, TitleNotFoundException {
-        Assert.assertTrue(service.isAllowedToWatch("PG", "18"));
-        Assert.assertTrue(service.isAllowedToWatch("PG", "15"));
-        Assert.assertTrue(service.isAllowedToWatch("PG", "12"));
-        Assert.assertTrue(service.isAllowedToWatch("PG", "PG"));
-        Assert.assertFalse(service.isAllowedToWatch("PG", "U"));
+    public void test_age12CanWatchLevel12AndBelow() throws TechnicalFailureException, TitleNotFoundException {
+
+        Assert.assertTrue(service.isAllowedToWatch("MOVIE_U", "12"));
+        Assert.assertTrue(service.isAllowedToWatch("MOVIE_PG", "12"));
+        Assert.assertTrue(service.isAllowedToWatch("MOVIE_12", "12"));
+        Assert.assertFalse(service.isAllowedToWatch("MOVIE_15", "12"));
+        Assert.assertFalse(service.isAllowedToWatch("MOVIE_18", "12"));
+    }
+
+    @Test
+    public void test_agePGCanWatchLevelPGAndBelow() throws TechnicalFailureException, TitleNotFoundException {
+        Assert.assertTrue(service.isAllowedToWatch("MOVIE_U", "PG"));
+        Assert.assertTrue(service.isAllowedToWatch("MOVIE_PG", "PG"));
+        Assert.assertFalse(service.isAllowedToWatch("MOVIE_12", "PG"));
+        Assert.assertFalse(service.isAllowedToWatch("MOVIE_15", "PG"));
+        Assert.assertFalse(service.isAllowedToWatch("MOVIE_18", "PG"));
+    }
+
+    @Test
+    public void test_underageCanWatchUnderageOnly() throws TechnicalFailureException, TitleNotFoundException {
+        Assert.assertTrue(service.isAllowedToWatch("MOVIE_U", "U"));
+        Assert.assertFalse(service.isAllowedToWatch("MOVIE_PG", "U"));
+        Assert.assertFalse(service.isAllowedToWatch("MOVIE_12", "U"));
+        Assert.assertFalse(service.isAllowedToWatch("MOVIE_15", "U"));
+        Assert.assertFalse(service.isAllowedToWatch("MOVIE_18", "U"));
     }
 
     @Test(expected = TitleNotFoundException.class)

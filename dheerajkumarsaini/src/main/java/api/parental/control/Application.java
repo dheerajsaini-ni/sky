@@ -28,6 +28,8 @@ public class Application implements CommandLineRunner{
 
 		if (args.length != 2){
 			LOG.info("Please provide movieId and preferredLevel as inputs. Sample is");
+			LOG.info("Movie id can be : [Sample Movie U, Sample Movie PG, Sample Movie 12, Sample Movie 15, Sample Movie 18]");
+			LOG.info("Preferred level can be : [U, PG, 12, 15, 18]");
 			LOG.info("java -jar build/libs/dheerajkumarsaini-0.0.1-SNAPSHOT.jar \"Sample Movie 15\" \"18\"");
 			System.exit(1);
 		}

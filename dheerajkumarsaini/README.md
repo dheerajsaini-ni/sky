@@ -25,7 +25,7 @@ Sample movies configured as part of MovieServiceMockImpl
 - Sample Movie 15
 - Sample Movie 18
 - error (To check TechnicalFailureException)
-- <any random name> (To check TitleNotFoundException)
+- Any random name (To check TitleNotFoundException)
    
 ### Running the test
 
